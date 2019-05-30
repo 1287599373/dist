@@ -61,14 +61,15 @@
         ,url: baseUrl + '/user/list'
         ,cols: [[
           {type:'checkbox', fixed: 'left',width: 40}
-          ,{field:'userName', title: '用户名'}
-          ,{field:'nikeName', title: '姓名'}
-          ,{field:'companyName', title: '企业名称'}
+          ,{field:'username', title: '用户名'}
+          ,{field:'nikename', title: '姓名'}
+          ,{field:'companyname', title: '企业名称'}
           ,{field:'time', title: '日期'}
           ,{fixed:'right', align:'center', toolbar: '#barDemo'}
         ]]
         ,id: 'LAY_table_user'
         ,page: true
+		,limit:3
         ,height: 315
       });
 
@@ -124,6 +125,8 @@
       var type = $(this).data('type');
       active[type] ? active[type].call(this) : '';
     });
+	
+
   });
   </script>
 

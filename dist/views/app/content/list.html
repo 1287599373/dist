@@ -17,13 +17,13 @@
           <div class="layui-inline">
             <label class="layui-form-label">登录名</label>
             <div class="layui-input-inline">
-              <input type="text" name="userName" placeholder="请输入" autocomplete="off" class="layui-input">
+              <input type="text" name="userName" id="username" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
           </div>
           <div class="layui-inline">
             <label class="layui-form-label">企业名称</label>
             <div class="layui-input-inline">
-              <input type="text" name="companyName" placeholder="请输入" autocomplete="off" class="layui-input">
+              <input type="text" name="companyName" id="companyname" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
           </div>
           <div class="layui-inline">
@@ -58,7 +58,7 @@
       //方法级渲染
       table.render({
         elem: '#LAY_table_user'
-        ,url: baseUrl + '/user/list'
+        ,url: baseUrl + '/user/page'
         ,cols: [[
           {type:'checkbox', fixed: 'left',width: 40}
           ,{field:'username', title: '用户名'}
@@ -77,7 +77,14 @@
       table.on('tool(user)', function(obj){
         var data = obj.data;
         if(obj.event === 'detail'){
-          layer.msg('ID：'+ data.id + ' 的查看操作');
+          var id = data.userid;
+          layer.open({
+            type: 2
+            ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            ,id: 'add' //防止重复弹出
+            ,area: ['700px', '500px']// 宽 高
+            ,content: 'detail.html?userid='+id
+          })
         } else if(obj.event === 'del'){
           layer.confirm('真的删除行么', function(index){
             obj.del();
@@ -89,32 +96,27 @@
       });
 
       var $ = layui.$, active = {
-        reload: function(){
-          var demoReload = $('#demoReload');          
+        search: function(){
           //执行重载
           table.reload('LAY_table_user', {
             page: {
               curr: 1 //重新从第 1 页开始
             }
             ,where: {
-              key: {
-                id: demoReload.val()
-              }
+                username: $('#username').val(),
+                companyname:$('#companyname').val()
             }
           });
-        },
-        search: function(){
-          layer.msg("查询");
         },
         batchdel: function(){
           layer.msg("批量删除");
         },
-        add:  function(){
+        add: function(){
           layer.open({
             type: 2
             ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
             ,id: 'add' //防止重复弹出
-            ,area: ['700px', '450px']// 宽 高
+            ,area: ['700px', '500px']// 宽 高
             ,content: 'listform.html'
           })
         }

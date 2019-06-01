@@ -11,20 +11,24 @@
   <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
 </head>
 <body>
-
+  <style >
+    span {
+      padding: 9px 15px 9px 15px;
+      line-height: 40px;
+    }
+  </style>
   <div class="layui-form" lay-filter="form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
       <div class="layui-inline">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-inline">
-          <input type="text" name="username" lay-verify="required" autocomplete="off" class="layui-input">
+          <span id="username"></span>
         </div>
       </div>
       <div class="layui-inline">
           <label class="layui-form-label">日期</label>
           <div class="layui-input-inline">
-            <input type="text" name="time" id="date" lay-verify="time" placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">
-          </div>
+            <span id="time"></span>
         </div>
       
     </div>
@@ -32,13 +36,13 @@
       <div class="layui-inline">
         <label class="layui-form-label">昵称</label>
         <div class="layui-input-inline">
-          <input type="text" name="nikename" lay-verify="required" autocomplete="off" class="layui-input">
+          <span id="nikename"></span>
         </div>
       </div>
       <div class="layui-inline">
           <label class="layui-form-label">用户密码</label>
           <div class="layui-input-inline">
-            <input type="text" name="password" lay-verify="required" autocomplete="off" class="layui-input">
+            <span id="password"></span>
           </div>
         </div>
       
@@ -47,13 +51,13 @@
         <div class="layui-inline">
             <label class="layui-form-label">企业名称</label>
             <div class="layui-input-inline">
-              <input type="text" name="companyname"  autocomplete="off" class="layui-input">
+              <span id="companyname"></span>
             </div>
           </div>
       <div class="layui-inline">
         <label class="layui-form-label">银行账户</label>
         <div class="layui-input-inline">
-          <input type="text" name="bankaccount"  autocomplete="off" class="layui-input">
+          <span id="bankaccount"></span>
         </div>
       </div>
           
@@ -63,13 +67,13 @@
       <div class="layui-inline">
           <label class="layui-form-label">信用编号</label>
           <div class="layui-input-inline">
-            <input type="text" name="creditcode"  autocomplete="off" class="layui-input">
+            <span id="creditcode"></span>
           </div>
         </div> 
       <div class="layui-inline">
           <label class="layui-form-label">积点</label>
           <div class="layui-input-inline">
-            <input type="text" name="accumulatepoints"  autocomplete="off" class="layui-input">
+            <span id="accumulatepoints"></span>
           </div>
         </div> 
     </div>
@@ -77,21 +81,14 @@
     <div class="layui-form-item">
             <label class="layui-form-label">平台</label>
             <div class="layui-input-block">
-              <select name="terracetype" lay-verify="required">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-              </select>
+              <span id="terracetype"></span>
             </div>
     </div>
     <div class="layui-form-item">
           <label class="layui-form-label">公司地址</label>
           <div class="layui-input-block">
-            <input type="text" name="companyaddress"  autocomplete="off" class="layui-input">
+            <span id="companyaddress"></span>
           </div>
-    </div>
-    <div class="layui-form-item" style="text-align: center;padding-top: 30px;">
-      <input class="layui-btn  layui-btn-radius" type="button" lay-submit lay-filter="form-submit" value="确认添加">
     </div>
   </div>
 
@@ -103,39 +100,25 @@
   <script>
 $(function(){
   var id = $.query.get("userid");
-  console.log("id="+id);
-})
-
- layui.use(['laydate','form','layer'], function(){
-  var laydate = layui.laydate
-  ,form = layui.form
-  ,layer = layui.layer;
-  //日期时间选择器
-  laydate.render({
-    elem: '#date'
-    ,type: 'datetime'
-    ,position:'fixed'
-  });
-
-  var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-  //监听提交
-  form.on('submit(form-submit)', function(data){
-    var formdata = data.field;
-    $.ajax({
-      url:baseUrl + "/user/save",
+  $.ajax({
+      url:baseUrl + "/user/info",
       type:"POST",
       dataType:"JSON",
-      data:formdata,
+      data:{
+        "id":id
+      },
       success:function(res){
         if(res.code == 0){
-          layer.msg('新增成功', {
-                      offset: '15px'
-                      ,icon: 1
-                      ,time: 1000
-                    }, function(){
-                      parent.layui.table.reload('LAY_table_user'); //重载表格
-                      parent.layer.close(index); //再执行关闭 
-                    });
+           $("#username").text(res.data.username);
+           $("#password").text(res.data.password);
+           $("#nikename").text(res.data.nikename);
+           $("#time").text(res.data.time);
+           $("#companyname").text(res.data.companyname);
+           $("#bankaccount").text(res.data.bankaccount);
+           $("#creditcode").text(res.data.creditcode);
+           $("#accumulatepoints").text(res.data.accumulatepoints);
+           $("#companyaddress").text(res.data.companyaddress);
+           $("#terracetype").text(res.data.terracetype);
         }else{
           layer.msg(res.msg);
         }
@@ -144,9 +127,7 @@ $(function(){
         layer.error("系统繁忙！");
       }
     });
-    return false;
-  });
- });
+})
   </script>
 </body>
 </html>

@@ -82,7 +82,7 @@
             type: 2
             ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
             ,id: 'add' //防止重复弹出
-            ,area: ['700px', '500px']// 宽 高
+            ,area: ['700px', '450px']// 宽 高
             ,content: 'detail.html?userid='+id
           })
         } else if(obj.event === 'del'){
@@ -91,7 +91,14 @@
             layer.close(index);
           });
         } else if(obj.event === 'edit'){
-          layer.alert('编辑行：<br>'+ JSON.stringify(data))
+          var id = data.userid;
+          layer.open({
+            type: 2
+            ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            ,id: 'add' //防止重复弹出
+            ,area: ['700px', '500px']// 宽 高
+            ,content: 'edit.html?userid='+id
+          })
         }
       });
 

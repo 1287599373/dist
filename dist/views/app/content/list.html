@@ -69,15 +69,13 @@
         ]]
         ,id: 'LAY_table_user'
         ,page: true
-		,limit:3
-        ,height: 315
       });
 
        //监听工具条
       table.on('tool(user)', function(obj){
         var data = obj.data;
+        var id = data.userid;
         if(obj.event === 'detail'){
-          var id = data.userid;
           layer.open({
             type: 2
             ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
@@ -87,11 +85,9 @@
           })
         } else if(obj.event === 'del'){
           layer.confirm('真的删除行么', function(index){
-            obj.del();
-            layer.close(index);
+            del(id);
           });
         } else if(obj.event === 'edit'){
-          var id = data.userid;
           layer.open({
             type: 2
             ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
@@ -116,7 +112,17 @@
           });
         },
         batchdel: function(){
-          layer.msg("批量删除");
+          var checkStatus = table.checkStatus('LAY_table_user')
+          ,data = checkStatus.data;
+          var ids = "";
+          for(i in data){
+            ids = ids + data[i].userid;
+            ids = ids + ","
+          }
+          if(ids.length>1){
+            ids = ids.substring(0,ids.length-1);
+          }
+          del(ids);
         },
         add: function(){
           layer.open({
@@ -128,6 +134,40 @@
           })
         }
     };
+
+    function del(ids){
+      if(!ids){
+        return;
+      }
+      $.ajax({
+          url: baseUrl + "/user/delete",
+          type:"POST",
+          dataType:"JSON",
+          data:{
+            ids:ids
+          },
+          success:function(res){
+            layer.msg(res.msg, {
+                      offset: '15px'
+                      ,icon: 1
+                      ,time: 1000
+                    }, function(){
+                      table.reload('LAY_table_user', {
+                        page: {
+                          curr: 1 //重新从第 1 页开始
+                        }
+                        ,where: {
+                            username: $('#username').val(),
+                            companyname:$('#companyname').val()
+                        }
+                      });
+                    });
+          },
+          error:function(res){
+            layer.error("系统繁忙！");
+          }
+      })
+    }
   
     //触发监听事件
     $('.btnDiv .layui-btn').on('click', function(){

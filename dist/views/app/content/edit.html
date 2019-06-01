@@ -24,7 +24,7 @@
       <div class="layui-inline">
           <label class="layui-form-label">日期</label>
           <div class="layui-input-inline">
-            <input type="text" id="time" name="time" id="date" lay-verify="time" placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">
+            <input type="text" id="time" name="time" lay-verify="time" placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">
           </div>
         </div>
       
@@ -143,7 +143,7 @@
   ,layer = layui.layer;
   //日期时间选择器
   laydate.render({
-    elem: '#date'
+    elem: '#time'
     ,type: 'datetime'
     ,position:'fixed'
   });

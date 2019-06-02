@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>商城列表</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+<link id="layuicss-layer" rel="stylesheet" href="../../../layuiadmin/layui/css/modules/layer/default/layer.css" media="all">
+<style type="text/css">
+   .layui-table-cell{  /*最后imageurl为字段的field*/
+      height: 100%;
+      max-width: 100%;
+    } 
+</style>
+</head>
+<body layadmin-themealias="default" style="">
+
+  <div class="layui-fluid">
+    <div class="layui-card btnDiv" >
+      <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">商城订单</label>
+            <div class="layui-input-inline">
+              <input type="text" id="mallorder" name="mallorder" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-inline">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-inline">
+              <input type="text" id="name" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+          </div>
+          <div class="layui-inline">
+            <button class="layui-btn layuiadmin-btn-list" lay-submit="" lay-filter="LAY-app-contlist-search" data-type="search">
+              <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="padding-bottom: 10px;padding-left: 10px;">
+          <button class="layui-btn layuiadmin-btn-list" data-type="batchdel">删除</button>
+          <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
+      </div>
+      <table class="layui-hide" id="LAY_table_mall" lay-filter="mall"></table> 
+    </div>
+  </div>
+
+  <script src="../../../layuiadmin/layui/layui.js"></script>  
+  <script src="../../../common/common.js"></script> 
+  <script src="../../../common/jquery/jquery-3.3.1.js"></script>
+
+  <script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+  </script>
+  <script>
+    layui.use(['table','layer'], function(){
+      var table = layui.table
+      ,layer = layui.layer;
+      
+      //方法级渲染
+      table.render({
+        elem: '#LAY_table_mall'
+        ,url: baseUrl + '/mall/list'
+        ,cols: [[
+          {type:'checkbox', fixed: 'left',width: 40}
+          ,{field:'name', title: '名称'}
+          ,{field:'imageurl', title: '图片',width: 150,templet:'<div><a target = "_blank" href = "{{attachUrl}}{{d.imageurl}}"> <img style="height:50px;width: 100px;" src= "{{attachUrl}}{{d.imageurl}}"></a></div>'}
+          ,{field:'requiredintegral', title: '所需积分'}
+          ,{field:'time', title: '日期'}
+          ,{field:'mallorder', title: '商城订单'}
+          ,{fixed:'right', align:'center', toolbar: '#barDemo'}
+        ]]
+        ,id: 'LAY_table_mall'
+        ,page: true
+      });
+
+       //监听工具条
+      table.on('tool(mall)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'detail'){
+          var id = data.mallid;
+          layer.open({
+            type: 2
+            ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            ,id: 'add' //防止重复弹出
+            ,area: ['480px', '550px']// 宽 高
+            ,content: 'detail.html?mallid='+id
+            ,resize: false//固定
+          })
+
+
+        } else if(obj.event === 'del'){
+          layer.confirm('真的删除行么', function(index){
+            del(id);
+          });
+        } else if(obj.event === 'edit'){
+          var id = data.mallid;
+          layer.open({
+            type: 2
+            ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            ,id: 'add' //防止重复弹出
+            ,area: ['480px', '550px']// 宽 高
+            ,content: 'edit.html?mallid='+id
+            ,resize: false//固定
+          })
+
+        }
+      });
+
+      var $ = layui.$, active = {
+        reload: function(){
+          var demoReload = $('#demoReload');          
+          //执行重载
+          table.reload('LAY_table_mall', {
+            page: {
+              curr: 1 //重新从第 1 页开始
+            }
+            ,where: {
+              key: {
+                id: demoReload.val()
+              }
+            }
+          });
+        },
+        search: function(){
+          table.reload('LAY_table_mall', {
+            page: {
+              curr: 1 //重新从第 1 页开始
+            }
+            ,where: {
+              mallorder: $('#mallorder').val(),
+              name:$('#name').val()
+            }
+          });
+      
+        },
+        batchdel: function(){
+          var checkStatus = table.checkStatus('LAY_table_mall')
+          ,data = checkStatus.data;
+          var ids = "";
+          for(i in data){
+            ids = ids + data[i].mallid;
+            ids = ids + ","
+          }
+          if(ids.length>1){
+            ids = ids.substring(0,ids.length-1);
+          }
+          del(ids);
+        },
+        add:  function(){
+          layer.open({
+            type: 2
+            ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            ,id: 'add' //防止重复弹出
+            ,area: ['480px', '550px']// 宽 高
+            ,content: 'listform.html'
+            ,resize: false//固定
+          })
+        }
+    };
+
+    function del(ids){
+      if(!ids){
+        return;
+      }
+      $.ajax({
+          url: baseUrl + "/mall/delete",
+          type:"POST",
+          dataType:"JSON",
+          data:{
+            ids:ids
+          },
+          success:function(res){
+            layer.msg(res.msg, {
+                      offset: '15px'
+                      ,icon: 1
+                      ,time: 1000
+                    }, function(){
+                      table.reload('LAY_table_mall', {
+                        page: {
+                          curr: 1 //重新从第 1 页开始
+                        }
+                        ,where: {
+                            name: $('#name').val(),
+                            mallorder:$('#mallorder').val()
+                        }
+                      });
+                    });
+          },
+          error:function(res){
+            layer.error("系统繁忙！");
+          }
+      })
+    }
+  
+    //触发监听事件
+    $('.btnDiv .layui-btn').on('click', function(){
+      var type = $(this).data('type');
+      active[type] ? active[type].call(this) : '';
+    });
+	
+
+  });
+  </script>
+
+
+<style id="LAY_layadmin_theme">.layui-side-menu,.layadmin-pagetabs .layui-tab-title li:after,.layadmin-pagetabs .layui-tab-title li.layui-this:after,.layui-layer-admin .layui-layer-title,.layadmin-side-shrink .layui-side-menu .layui-nav>.layui-nav-item>.layui-nav-child{background-color:#20222A !important;}.layui-nav-tree .layui-this,.layui-nav-tree .layui-this>a,.layui-nav-tree .layui-nav-child dd.layui-this,.layui-nav-tree .layui-nav-child dd.layui-this a{background-color:#009688 !important;}.layui-layout-admin .layui-logo{background-color:#20222A !important;}</style></body></html>

@@ -1,0 +1,189 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>编辑</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+</head>
+<body>
+
+  <div class="layui-form" lay-filter="form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    <input type="hidden" id="id" name="mallid">
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-inline">
+          <input type="text" id="name" name="name" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+          <label class="layui-form-label">所需积分</label>
+          <div class="layui-input-inline">
+            <input type="numer" id="requiredintegral" name="requiredintegral" lay-verify="number|required" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+          <label class="layui-form-label">日期</label>
+          <div class="layui-input-inline">
+            <input type="text" id="time" name="time" lay-verify="time" id = "date" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">商城订单</label>
+        <div class="layui-input-inline">
+          <input type="text" id="mallorder" name="mallorder" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+          <label class="layui-form-label">图片</label>
+          <div class="layui-input-inline">
+              <input type="hidden" name="imageurl" id = "imageurl" lay-verify="required" placeholder="请输入图片" autocomplete="off" class="layui-input">
+              <div class="layui-upload">
+                <button type="button" class="layui-btn" id="test1">上传图片</button>
+                <div class="layui-upload-list">
+                  <img class="layui-upload-img" id="demo1" style="height: 75px;width:92px;border:0.5px solid grey;">
+                  <p id="demoText"></p>
+                </div>
+              </div> 
+            </div>
+        </div>
+      
+    </div>
+   
+    <div class="layui-form-item" style="text-align: center;padding-top: 30px;">
+      <input class="layui-btn  layui-btn-radius" type="button" lay-submit lay-filter="form-submit" value="确认修改">
+    </div>
+  </div>
+
+  <script src="../../../layuiadmin/layui/layui.js"></script>  
+  <script src="../../../common/common.js"></script> 
+  <script src="../../../common/jquery/jquery-3.3.1.js"></script>
+  <!--html传值获取插件-->
+  <script src="../../../common/jquery/jquery.params.js"></script>
+  <script>
+ $(function(){
+  var id = $.query.get("mallid");
+  console.log(id);
+  $("#id").val(id);
+  $.ajax({
+      url:baseUrl + "/mall/info",
+      type:"POST",
+      dataType:"JSON",
+      data:{
+        "id":id
+      },
+      success:function(res){
+        if(res.code == 0){
+           $("#name").val(res.data.name);
+           $("#requiredintegral").val(res.data.requiredintegral);
+           $("#time").val(res.data.time);
+           $("#mallorder").val(res.data.mallorder);
+           $("#imageurl").val(attachUrl+res.data.imageurl);
+           $("#imageurl").attr("src",attachUrl+res.data.imageurl);
+           $("#imageurlhttp").attr("href",attachUrl+res.data.imageurl);
+           $("#demo1").attr("src",attachUrl+res.data.imageurl);
+
+           var option = document.getElementById(res.data.terracetype);
+           console.log(option)
+           $(option).prop('selected',true);
+        }else{
+          layer.msg(res.msg);
+        }
+      },
+      error:function(res){
+        layer.error("系统繁忙！");
+      }
+    });
+})
+ layui.use(['laydate','form','layer','upload'], function(){
+  var laydate = layui.laydate
+  ,form = layui.form
+  ,layer = layui.layer;
+  var upload = layui.upload;
+  //日期时间选择器
+  laydate.render({
+    elem: '#time'
+    ,type: 'datetime'
+    ,format:'yyyy-MM-dd HH:mm'
+    ,position:'fixed'
+  });
+  //先得到当前iframe层的索引
+  var index = parent.layer.getFrameIndex(window.name); 
+  //监听提交
+  form.on('submit(form-submit)', function(data){
+    var formdata = data.field;
+    $.ajax({
+      url:baseUrl + "/mall/update",
+      type:"POST",
+      dataType:"JSON",
+      data:formdata,
+      success:function(res){
+        if(res.code == 0){
+          layer.msg('修改成功', {
+                      offset: '15px'
+                      ,icon: 1
+                      ,time: 1000
+                    }, function(){
+                      parent.layui.table.reload('LAY_table_mall'); //重载表格
+                      parent.layer.close(index); //再执行关闭 
+                    });
+        }else{
+          layer.msg(res.msg);
+        }
+      },
+      error:function(res){
+        layer.error("系统繁忙！");
+      }
+    });
+    return false;
+  });
+
+    //普通图片上传
+    var uploadInst = upload.render({
+    elem: '#test1'
+    ,url: baseUrl + "/mall/addAttach"
+    ,accept: 'images'
+    ,acceptMime: 'image/*'
+    ,before: function(obj){
+      //预读本地文件示例，不支持ie8
+      obj.preview(function(index, file, result){
+        $('#demo1').attr('src', result); //图片链接（base64）
+      });
+    }
+    ,done: function(res){
+      //如果上传失败
+      if(res.code == 0){
+        $('#imageurl').val(res.data.src);
+        return layer.msg('上传成功');
+      }else{
+        return layer.msg('上传失败');
+      }
+      //上传成功
+    }
+    ,error: function(){
+      //演示失败状态，并实现重传
+      var demoText = $('#demoText');
+      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+      demoText.find('.demo-reload').on('click', function(){
+        uploadInst.upload();
+      });
+    }
+  });
+
+ });
+  </script>
+</body>
+</html>

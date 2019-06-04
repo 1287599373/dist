@@ -40,7 +40,7 @@
     </div>
     <div class="layui-form-item">
       <div class="layui-inline">
-        <label class="layui-form-label">商城订单</label>
+        <label class="layui-form-label">编号</label>
         <div class="layui-input-inline">
           <input type="text" id="mallorder" name="mallorder" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
@@ -91,7 +91,7 @@
            $("#requiredintegral").val(res.data.requiredintegral);
            $("#time").val(res.data.time);
            $("#mallorder").val(res.data.mallorder);
-           $("#imageurl").val(attachUrl+res.data.imageurl);
+           $("#imageurl").val(res.data.imageurl);
            $("#imageurl").attr("src",attachUrl+res.data.imageurl);
            $("#imageurlhttp").attr("href",attachUrl+res.data.imageurl);
            $("#demo1").attr("src",attachUrl+res.data.imageurl);

@@ -9,10 +9,10 @@
   <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
 <link id="layuicss-layer" rel="stylesheet" href="../../../layuiadmin/layui/css/modules/layer/default/layer.css" media="all">
 <style type="text/css">
-   .layui-table-cell{  /*最后imageurl为字段的field*/
-      height: 100%;
-      max-width: 100%;
-    } 
+    .layui-table-cell{
+      height:auto !important;
+      line-height: 50px !important;
+    }
 </style>
 </head>
 <body layadmin-themealias="default" style="">
@@ -22,7 +22,7 @@
       <div class="layui-form layui-card-header layuiadmin-card-header-auto">
         <div class="layui-form-item">
           <div class="layui-inline">
-            <label class="layui-form-label">商城订单</label>
+            <label class="layui-form-label">编号</label>
             <div class="layui-input-inline">
               <input type="text" id="mallorder" name="mallorder" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
@@ -67,12 +67,12 @@
         elem: '#LAY_table_mall'
         ,url: baseUrl + '/mall/list'
         ,cols: [[
-          {type:'checkbox', fixed: 'left',width: 40}
+          {type:'checkbox',fixed: 'left',width: 40}
           ,{field:'name', title: '名称'}
           ,{field:'imageurl', title: '图片',width: 150,templet:'<div><a target = "_blank" href = "{{attachUrl}}{{d.imageurl}}"> <img style="height:50px;width: 100px;" src= "{{attachUrl}}{{d.imageurl}}"></a></div>'}
           ,{field:'requiredintegral', title: '所需积分'}
           ,{field:'time', title: '日期'}
-          ,{field:'mallorder', title: '商城订单'}
+          ,{field:'mallorder', title: '编号'}
           ,{fixed:'right', align:'center', toolbar: '#barDemo'}
         ]]
         ,id: 'LAY_table_mall'
@@ -82,8 +82,8 @@
        //监听工具条
       table.on('tool(mall)', function(obj){
         var data = obj.data;
+        var id = data.mallid;
         if(obj.event === 'detail'){
-          var id = data.mallid;
           layer.open({
             type: 2
             ,offset: 'auto' //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset

@@ -65,7 +65,7 @@
                       ,icon: 1
                       ,time: 1000
                     }, function(){
-                      location.href = '../index.html'; //后台主页
+                      location.href = '../index.html?user='+ res.data.username+"&userid="+res.data.userid; //后台主页
                     });
           }else{
             layer.msg(res.msg);

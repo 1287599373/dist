@@ -118,7 +118,14 @@ $(function(){
            $("#creditcode").text(res.data.creditcode);
            $("#accumulatepoints").text(res.data.accumulatepoints);
            $("#companyaddress").text(res.data.companyaddress);
-           $("#terracetype").text(res.data.terracetype);
+           var type = res.data.terracetype;
+           if(1 == type){
+             $("#terracetype").text("货主");
+           }else if(2==type){
+            $("#terracetype").text("货车");
+           }else{
+            $("#terracetype").text("平台管理员");
+           }
         }else{
           layer.msg(res.msg);
         }

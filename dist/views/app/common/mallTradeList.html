@@ -21,9 +21,9 @@
             </div>
           </div>
           <div class="layui-inline">
-            <label class="layui-form-label">商品编号</label>
+            <label class="layui-form-label">商品名称</label>
             <div class="layui-input-inline">
-              <input type="text" name="mallOrder" id="mallOrder" placeholder="请输入" autocomplete="off" class="layui-input">
+              <input type="text" name="mallName" id="mallName" placeholder="请输入" autocomplete="off" class="layui-input">
             </div>
           </div>
           <div class="layui-inline">
@@ -75,7 +75,9 @@
         ,cols: [[
           {field:'UserName', title: '货车用户名'}
           ,{field:'name', title: '商品名称'}
-          ,{field:'mallorder', title: '商品编号'}
+          ,{field:'specifications', title: '商品规格'}
+          ,{field:'price', title: '商品价格/元',templet:'<label>{{d.price}}/元</label>'}
+          ,{field:'stockbalance', title: '商品库存量'}
           ,{field:'Requiredintegral', title: '所需积分'}
           ,{field:'mallNumber', title: '商品数量'}
           ,{field:'Consumptionintegral', title:'消费积分'}
@@ -96,7 +98,7 @@
                 userName: $('#username').val(),
                 startTime:$('#start').val(),
                 endTime:$("#end").val(),
-                mallOrder:$("#mallOrder").val()
+                mallName:$("#mallName").val()
             }
           });
         }

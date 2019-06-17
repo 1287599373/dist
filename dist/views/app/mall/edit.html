@@ -12,11 +12,11 @@
 </head>
 <body>
 
-  <div class="layui-form" lay-filter="form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+  <div class="layui-form" lay-filter="form-list" id="layuiadmin-app-form-list" style="padding:20px 20px 0px 49px;">
     <input type="hidden" id="id" name="mallid">
     <div class="layui-form-item">
       <div class="layui-inline">
-        <label class="layui-form-label">名称</label>
+        <label class="layui-form-label">名称:</label>
         <div class="layui-input-inline">
           <input type="text" id="name" name="name" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
@@ -24,15 +24,39 @@
     </div>
     <div class="layui-form-item">
       <div class="layui-inline">
-          <label class="layui-form-label">所需积分</label>
+        <label class="layui-form-label">规格:</label>
+        <div class="layui-input-inline">
+          <input type="text" id="specifications" name="specifications" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">价格:</label>
+        <div class="layui-input-inline">
+          <input type="number" id="price" name="price" lay-verify="number|required" autocomplete="off" class="layui-input"style="display: inline-block;width: 92%;">元
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">库存量:</label>
+        <div class="layui-input-inline">
+          <input type="number" id="stockbalance" name="stockbalance" lay-verify="number|required" autocomplete="off" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+          <label class="layui-form-label">所需积分:</label>
           <div class="layui-input-inline">
-            <input type="numer" id="requiredintegral" name="requiredintegral" lay-verify="number|required" autocomplete="off" class="layui-input">
+            <input type="number" id="requiredintegral" name="requiredintegral" lay-verify="number|required" autocomplete="off" class="layui-input">
           </div>
         </div>
     </div>
     <div class="layui-form-item">
       <div class="layui-inline">
-          <label class="layui-form-label">日期</label>
+          <label class="layui-form-label">日期:</label>
           <div class="layui-input-inline">
             <input type="text" id="time" name="time" lay-verify="time" id = "date" autocomplete="off" class="layui-input">
           </div>
@@ -40,7 +64,7 @@
     </div>
     <div class="layui-form-item">
       <div class="layui-inline">
-        <label class="layui-form-label">编号</label>
+        <label class="layui-form-label">显示顺序:</label>
         <div class="layui-input-inline">
           <input type="text" id="mallorder" name="mallorder" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
@@ -48,7 +72,7 @@
     </div>
     <div class="layui-form-item">
       <div class="layui-inline">
-          <label class="layui-form-label">图片</label>
+          <label class="layui-form-label">图片:</label>
           <div class="layui-input-inline">
               <input type="hidden" name="imageurl" id = "imageurl" lay-verify="required" placeholder="请输入图片" autocomplete="off" class="layui-input">
               <div class="layui-upload">
@@ -91,6 +115,9 @@
            $("#requiredintegral").val(res.data.requiredintegral);
            $("#time").val(res.data.time);
            $("#mallorder").val(res.data.mallorder);
+           $("#specifications").val(res.data.specifications);
+           $("#price").val(res.data.price);
+           $("#stockbalance").val(res.data.stockbalance);
            $("#imageurl").val(res.data.imageurl);
            $("#imageurl").attr("src",attachUrl+res.data.imageurl);
            $("#imageurlhttp").attr("href",attachUrl+res.data.imageurl);

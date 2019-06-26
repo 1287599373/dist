@@ -7,7 +7,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
   <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
-<link id="layuicss-layer" rel="stylesheet" href="../../../layuiadmin/layui/css/modules/layer/default/layer.css" media="all"></head>
+<link id="layuicss-layer" rel="stylesheet" href="../../../layuiadmin/layui/css/modules/layer/default/layer.css" media="all">
+<script type="text/html" id="finishStartTpl">
+  {{#  if(d.finishStart == '0'){ }}
+    未完成
+  {{#  } else if(d.finishStart == '1'){ }}
+		未完成
+	{{#  } else if(d.finishStart == '2'){ }}
+    待确认
+	{{#  } else if(d.finishStart == '3'){ }}
+		已完成
+	{{#  } else{ }}
+		其他
+  {{#  } }}
+</script>
+</head>
 <body layadmin-themealias="default" >
 
   <div class="layui-fluid">
@@ -74,7 +88,7 @@
           ,{field:'ReceivingPlace', title:'接受地点'}
           ,{field:'bidTime', title: '订单时间'}
           ,{field:'bidStart', title:'标选状态'}
-          ,{field:'finishStart', title: '完成状态'}
+          ,{field:'finishStart', title: '完成状态',templet:'#finishStartTpl'}
           ,{field:'Time', title:'日期'}
         ]]
         ,id: 'LAY_table_user'

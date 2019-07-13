@@ -42,6 +42,7 @@
             <button class="layui-btn layuiadmin-btn-list" lay-submit="" lay-filter="LAY-app-contlist-search" data-type="search">
               <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
             </button>
+            <button class="layui-btn layuiadmin-btn-list" data-type="export">导出</button>
           </div>
         </div>
       </div>
@@ -104,6 +105,13 @@
                 mallName:$("#mallName").val()
             }
           });
+        },
+        export: function(){
+          var userName = $('#username').val();
+          var startTime = $('#start').val();
+          var endTime = $("#end").val();
+          var mallName = $("#mallName").val();
+          window.location.href = baseUrl + '/malltrade/exportMall?userName='+userName +"&startTime="+startTime+"&endTime="+endTime+"&mallName="+mallName;
         },
 				add:  function(){
 				  layer.open({
